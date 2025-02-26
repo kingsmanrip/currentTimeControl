@@ -1,0 +1,28 @@
+/* Custom styles can be added here */
+.form-input {
+  @apply w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500;
+}
+
+.btn {
+  @apply px-4 py-2 font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2;
+}
+
+.btn-primary {
+  @apply bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-500;
+}
+
+.btn-secondary {
+  @apply bg-gray-200 text-gray-700 hover:bg-gray-300 focus:ring-gray-500;
+}
+
+.btn-danger {
+  @apply bg-red-600 text-white hover:bg-red-700 focus:ring-red-500;
+}
+
+.card {
+  @apply bg-white shadow-md rounded-lg p-6;
+}
+
+.section-title {
+  @apply text-xl font-semibold text-gray-800 mb-4;
+}
