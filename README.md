@@ -8,7 +8,7 @@ The Painter Timesheet app is a full-stack web application that allows painting c
 
 ### Key Features
 
-- **User Authentication**: Simple login system with role-based access (Admin/Painter)
+- **User Authentication**: Secure login system with role-based access (Admin/Painter)
 - **Timesheet Entry**:
   - Date, start time, end time
   - Optional break times
@@ -24,6 +24,7 @@ The Painter Timesheet app is a full-stack web application that allows painting c
   - Export timesheet data to CSV
   - Edit timesheet entries
   - Auto-refresh data
+  - System protection against deleting the last admin user
 - **Painter Dashboard**:
   - Submit work hours
   - View and edit previous submissions
@@ -39,34 +40,56 @@ The Painter Timesheet app is a full-stack web application that allows painting c
 - **Backend**:
   - Express.js
   - SQLite database
+  - bcrypt for password hashing
 
 ## Installation and Setup
 
+### Prerequisites
+- Node.js (v14 or later)
+- npm (v6 or later)
+
+### Steps
+
 1. Clone the repository:
-   ```
+   ```bash
    git clone https://github.com/kingsmanrip/painterAppCandidate.git
    cd painterAppCandidate
    ```
 
-2. Install dependencies:
-   ```
-   npm install
+2. Install dependencies for both client and server:
+   ```bash
+   cd client && npm install
+   cd ../server && npm install
    ```
 
 3. Start the application:
-   ```
+   ```bash
+   # In one terminal, start the server
+   cd server
+   npm start
+
+   # In another terminal, start the client
+   cd client
    npm start
    ```
 
 4. Access the application:
-   - Frontend: http://localhost:3000
-   - Backend API: http://localhost:5000
+   - Frontend: http://localhost:3003
+   - Backend API: http://localhost:3001
+
+## Development Mode
+
+- The client uses React's development server with hot reloading
+- Both servers support live reloading during development
+- Environment variables can be configured in server/.env for development
 
 ## Usage
 
 ### Admin Access
 - Login with admin credentials
 - Manage painters (add, edit, delete)
+  - Note: System prevents deletion of the last admin user to maintain system access
+  - To delete an admin, ensure another admin user exists first
 - View and filter timesheet entries
 - Export data to CSV
 - Edit timesheet entries
@@ -97,6 +120,14 @@ The Painter Timesheet app is a full-stack web application that allows painting c
 - location
 - notes (optional)
 
+## Security Features
+
+- Password hashing using bcrypt
+- Role-based access control
+- Protection against deleting the last admin user
+- Authentication middleware for API routes
+- Session-based authentication
+
 ## Recent Improvements
 
 - Added dashboard summary cards for quick insights
@@ -105,3 +136,19 @@ The Painter Timesheet app is a full-stack web application that allows painting c
 - Enhanced painter dashboard with hours summary
 - Added confirmation dialog for timesheet submission
 - Improved success/error messaging
+- Enhanced user management security features
+
+## Troubleshooting
+
+- Ensure all dependencies are installed correctly
+- Check that ports 3001 (server) and 3003 (client) are available
+- Verify Node.js and npm versions meet the prerequisites
+- If unable to delete an admin user, ensure another admin user exists in the system
+
+## Contributing
+
+Please read CONTRIBUTING.md for details on our code of conduct and the process for submitting pull requests.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE.md file for details
