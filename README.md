@@ -130,6 +130,13 @@ The Painter Timesheet app is a full-stack web application that allows painting c
 
 ## Recent Improvements
 
+- Removed weekly timesheet view to simplify the user interface
+- Added deployment configuration for production environments
+- Implemented secure JWT handling and environment variable configuration
+- Added database backup strategy with retention policy
+- Enhanced API URL configuration for production deployments
+- Improved CORS configuration for security
+- Created comprehensive deployment guide for Hostinger Ubuntu VPS
 - Added dashboard summary cards for quick insights
 - Implemented timesheet editing functionality for admins
 - Added auto-refresh feature for real-time data updates
@@ -137,6 +144,10 @@ The Painter Timesheet app is a full-stack web application that allows painting c
 - Added confirmation dialog for timesheet submission
 - Improved success/error messaging
 - Enhanced user management security features
+
+## Deployment
+
+For detailed instructions on deploying this application to a production environment, please refer to the [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) file.
 
 ## Troubleshooting
 
