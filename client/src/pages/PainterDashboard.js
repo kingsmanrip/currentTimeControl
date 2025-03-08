@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../utils/AuthContext';
 import { timesheetService } from '../services/api';
 import { calculateWorkHours, formatTime, formatDate, toDateInputValue, getCurrentTime } from '../utils/timeCalculations';
-import WeeklyTimesheetView from '../components/WeeklyTimesheetView';
 
 const PainterDashboard = () => {
   const { currentUser, logout } = useAuth();
@@ -12,7 +11,6 @@ const PainterDashboard = () => {
   const [timesheets, setTimesheets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [viewMode, setViewMode] = useState('daily'); // 'daily' or 'weekly'
   const [successMessage, setSuccessMessage] = useState('');
   const [editingTimesheet, setEditingTimesheet] = useState(null);
   const [summaryStats, setSummaryStats] = useState({
@@ -260,79 +258,45 @@ const PainterDashboard = () => {
       
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
-          {/* View Toggle */}
-          <div className="mb-6 flex justify-center">
-            <div className="inline-flex rounded-md shadow-sm" role="group">
-              <button
-                type="button"
-                onClick={() => setViewMode('daily')}
-                className={`px-4 py-2 text-sm font-medium rounded-l-lg ${
-                  viewMode === 'daily'
-                    ? 'bg-indigo-600 text-white'
-                    : 'bg-white text-gray-700 hover:bg-gray-50'
-                }`}
-              >
-                Daily View
-              </button>
-              <button
-                type="button"
-                onClick={() => setViewMode('weekly')}
-                className={`px-4 py-2 text-sm font-medium rounded-r-lg ${
-                  viewMode === 'weekly'
-                    ? 'bg-indigo-600 text-white'
-                    : 'bg-white text-gray-700 hover:bg-gray-50'
-                }`}
-              >
-                Weekly View
-              </button>
-            </div>
-          </div>
-
-          {viewMode === 'weekly' ? (
-            <WeeklyTimesheetView 
-              currentUser={currentUser} 
-              onTimesheetSubmitted={fetchTimesheets} 
-            />
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Timesheet Form */}
-              <div className="bg-white shadow rounded-lg p-6">
-                <h2 className="text-xl font-semibold mb-4">
-                  {editingTimesheet ? 'Edit Timesheet' : 'Submit Timesheet'}
-                </h2>
-                
-                {/* Summary Stats */}
-                <div className="mb-4 p-3 bg-gray-50 rounded-md">
-                  <h3 className="text-sm font-medium text-gray-700 mb-2">Your Hours Summary</h3>
-                  <div className="grid grid-cols-3 gap-4 text-center">
-                    <div>
-                      <div className="text-lg font-bold text-indigo-600">{summaryStats.today.hours.toFixed(2)}</div>
-                      <div className="text-xs text-gray-500">Hours Today</div>
-                    </div>
-                    <div>
-                      <div className="text-lg font-bold text-indigo-600">{summaryStats.thisWeek.hours.toFixed(2)}</div>
-                      <div className="text-xs text-gray-500">Hours This Week</div>
-                    </div>
-                    <div>
-                      <div className="text-lg font-bold text-indigo-600">{summaryStats.thisMonth.hours.toFixed(2)}</div>
-                      <div className="text-xs text-gray-500">Hours This Month</div>
-                    </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Timesheet Form */}
+            <div className="bg-white shadow rounded-lg p-6">
+              <h2 className="text-xl font-semibold mb-4">
+                {editingTimesheet ? 'Edit Timesheet' : 'Submit Timesheet'}
+              </h2>
+              
+              {/* Summary Stats */}
+              <div className="mb-4 p-3 bg-gray-50 rounded-md">
+                <h3 className="text-sm font-medium text-gray-700 mb-2">Your Hours Summary</h3>
+                <div className="grid grid-cols-3 gap-4 text-center">
+                  <div>
+                    <div className="text-lg font-bold text-indigo-600">{summaryStats.today.hours.toFixed(2)}</div>
+                    <div className="text-xs text-gray-500">Hours Today</div>
+                  </div>
+                  <div>
+                    <div className="text-lg font-bold text-indigo-600">{summaryStats.thisWeek.hours.toFixed(2)}</div>
+                    <div className="text-xs text-gray-500">Hours This Week</div>
+                  </div>
+                  <div>
+                    <div className="text-lg font-bold text-indigo-600">{summaryStats.thisMonth.hours.toFixed(2)}</div>
+                    <div className="text-xs text-gray-500">Hours This Month</div>
                   </div>
                 </div>
+              </div>
               
-                {successMessage && (
-                  <div className="mb-4 text-sm text-green-600 bg-green-50 p-3 rounded-md border border-green-200">
-                    {successMessage}
-                  </div>
-                )}
-                
-                {error && (
-                  <div className="mb-4 text-sm text-red-600 bg-red-50 p-3 rounded-md border border-red-200">
-                    {error}
-                  </div>
-                )}
+              {successMessage && (
+                <div className="mb-4 text-sm text-green-600 bg-green-50 p-3 rounded-md border border-green-200">
+                  {successMessage}
+                </div>
+              )}
               
-                <form id="timesheet-form" onSubmit={handleSubmit}>
+              {error && (
+                <div className="mb-4 text-sm text-red-600 bg-red-50 p-3 rounded-md border border-red-200">
+                  {error}
+                </div>
+              )}
+              
+              <form id="timesheet-form" onSubmit={handleSubmit}>
                 <div className="mb-4">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Date *
@@ -496,57 +460,57 @@ const PainterDashboard = () => {
                     {submitting ? 'Submitting...' : (editingTimesheet ? 'Update Timesheet' : 'Submit Timesheet')}
                   </button>
                 </div>
-                </form>
-                
-                {/* Confirmation Modal */}
-                {showConfirmation && (
-                  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
-                      <h3 className="text-lg font-medium mb-4">Confirm Timesheet Submission</h3>
-                      <p className="mb-4">Please review your timesheet details:</p>
-                      <div className="mb-4 text-sm">
-                        <div className="grid grid-cols-2 gap-2">
-                          <div className="font-medium">Date:</div>
-                          <div>{formatDate(date)}</div>
-                          <div className="font-medium">Time:</div>
-                          <div>{formatTime(startTime)} - {formatTime(endTime)}</div>
-                          <div className="font-medium">Break:</div>
-                          <div>
-                            {breakStart && breakEnd 
-                              ? `${formatTime(breakStart)} - ${formatTime(breakEnd)}` 
-                              : 'No break'}
-                          </div>
-                          <div className="font-medium">Hours:</div>
-                          <div>{calculatedHours.toFixed(2)}</div>
-                          <div className="font-medium">Location(s):</div>
-                          <div>{locations.filter(loc => loc.trim() !== '').join(', ')}</div>
+              </form>
+              
+              {/* Confirmation Modal */}
+              {showConfirmation && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                  <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+                    <h3 className="text-lg font-medium mb-4">Confirm Timesheet Submission</h3>
+                    <p className="mb-4">Please review your timesheet details:</p>
+                    <div className="mb-4 text-sm">
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="font-medium">Date:</div>
+                        <div>{formatDate(date)}</div>
+                        <div className="font-medium">Time:</div>
+                        <div>{formatTime(startTime)} - {formatTime(endTime)}</div>
+                        <div className="font-medium">Break:</div>
+                        <div>
+                          {breakStart && breakEnd 
+                            ? `${formatTime(breakStart)} - ${formatTime(breakEnd)}` 
+                            : 'No break'}
                         </div>
-                      </div>
-                      <div className="flex justify-end space-x-2">
-                        <button
-                          type="button"
-                          onClick={() => setShowConfirmation(false)}
-                          className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
-                        >
-                          Cancel
-                        </button>
-                        <button
-                          type="button"
-                          onClick={confirmSubmit}
-                          className="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
-                        >
-                          Confirm
-                        </button>
+                        <div className="font-medium">Hours:</div>
+                        <div>{calculatedHours.toFixed(2)}</div>
+                        <div className="font-medium">Location(s):</div>
+                        <div>{locations.filter(loc => loc.trim() !== '').join(', ')}</div>
                       </div>
                     </div>
+                    <div className="flex justify-end space-x-2">
+                      <button
+                        type="button"
+                        onClick={() => setShowConfirmation(false)}
+                        className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="button"
+                        onClick={confirmSubmit}
+                        className="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
+                      >
+                        Confirm
+                      </button>
+                    </div>
                   </div>
-                )}
-              </div>
-              
-              {/* Recent Timesheets */}
-              <div className="bg-white shadow rounded-lg p-6">
-                <h2 className="text-xl font-semibold mb-4">Recent Timesheets</h2>
-              
+                </div>
+              )}
+            </div>
+            
+            {/* Recent Timesheets */}
+            <div className="bg-white shadow rounded-lg p-6">
+              <h2 className="text-xl font-semibold mb-4">Recent Timesheets</h2>
+            
               {loading ? (
                 <p>Loading timesheets...</p>
               ) : timesheets.length === 0 ? (
@@ -620,9 +584,8 @@ const PainterDashboard = () => {
                   </table>
                 </div>
               )}
-              </div>
             </div>
-          )}
+          </div>
         </div>
       </main>
     </div>
