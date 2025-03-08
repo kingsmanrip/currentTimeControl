@@ -83,7 +83,10 @@ function initializeDatabase() {
 }
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: process.env.CORS_ORIGIN || 'http://localhost:3003',
+  credentials: true
+}));
 app.use(express.json());
 app.use(morgan('dev'));
 
@@ -94,13 +97,25 @@ app.use((req, res, next) => {
 });
 
 // JWT secret
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  console.error('JWT_SECRET is not defined in environment variables. Server cannot start securely.');
+  process.exit(1);
+}
 app.set('jwt-secret', JWT_SECRET);
 
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/timesheets', timesheetRoutes);
+
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, 'public')));
+
+// For any request that doesn't match an API route, send the React app
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 // Error handling middleware
 app.use((err, req, res, next) => {

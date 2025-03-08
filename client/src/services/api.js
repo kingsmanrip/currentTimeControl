@@ -1,8 +1,15 @@
 import axios from 'axios';
 
-// Get the current hostname from the browser
-const hostname = window.location.hostname;
-const API_URL = `http://${hostname}:3001/api`;
+// API URL configuration based on environment
+let API_URL;
+if (process.env.NODE_ENV === 'production') {
+  // Use relative path in production
+  API_URL = '/api';
+} else {
+  // Use full URL with port in development
+  const hostname = window.location.hostname;
+  API_URL = `http://${hostname}:3001/api`;
+}
 
 // Create axios instance with base URL
 const api = axios.create({
