@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3001/api';
+// Get the current hostname from the browser
+const hostname = window.location.hostname;
+const API_URL = `http://${hostname}:3001/api`;
 
 // Create axios instance with base URL
 const api = axios.create({

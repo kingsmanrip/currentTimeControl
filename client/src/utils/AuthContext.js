@@ -34,7 +34,10 @@ export const AuthProvider = ({ children }) => {
       setLoading(true);
       setError(null);
       
-      const response = await axios.post('http://localhost:3001/api/auth/login', {
+      // Get the current hostname from the browser
+      const hostname = window.location.hostname;
+      // Use the hostname instead of hardcoded localhost
+      const response = await axios.post(`http://${hostname}:3001/api/auth/login`, {
         username,
         password
       });
