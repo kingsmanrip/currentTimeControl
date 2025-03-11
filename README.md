@@ -77,6 +77,48 @@ The Painter Timesheet app is a full-stack web application that allows painting c
    - Frontend: http://localhost:3003
    - Backend API: http://localhost:3001
 
+## Production Deployment
+
+### PM2 Deployment (Recommended)
+
+The application is configured to run with PM2 for production environments:
+
+1. Install PM2 globally:
+   ```bash
+   npm install -g pm2
+   ```
+
+2. Use the provided ecosystem.config.js file to start the application:
+   ```bash
+   cd /path/to/currentTimeControl
+   pm2 start ecosystem.config.js
+   ```
+
+3. Configure PM2 to start on system boot:
+   ```bash
+   pm2 startup
+   pm2 save
+   ```
+
+### Accessing the Application
+
+The application is accessible at:
+
+```
+https://patriciadmin.site
+```
+
+The application uses a trusted SSL certificate from Let's Encrypt, ensuring secure access without browser warnings.
+
+### Server Coexistence
+
+This application is designed to coexist with the fasterInvoice application on the same server:
+
+- **currentTimeControl**: Runs on port 3002 and is accessible at https://patriciadmin.site
+- **fasterInvoice**: Runs on port 7654 and is accessible at https://mauricioinvoice.site
+
+Both applications use separate Nginx configurations and can run simultaneously without conflicts. Changes to one application should not affect the other as they use different ports, domains, and configuration files.
+
 ## Development Mode
 
 - The client uses React's development server with hot reloading
@@ -130,6 +172,9 @@ The Painter Timesheet app is a full-stack web application that allows painting c
 
 ## Recent Improvements
 
+- Implemented PM2 deployment configuration for improved reliability
+- Added ecosystem.config.js for easier deployment and environment configuration
+- Configured to run alongside fasterInvoice application without conflicts
 - Removed weekly timesheet view to simplify the user interface
 - Added deployment configuration for production environments
 - Implemented secure JWT handling and environment variable configuration
@@ -155,6 +200,7 @@ For detailed instructions on deploying this application to a production environm
 - Check that ports 3001 (server) and 3003 (client) are available
 - Verify Node.js and npm versions meet the prerequisites
 - If unable to delete an admin user, ensure another admin user exists in the system
+- If the application is not accessible at patriciadmin.site, check if PM2 is running the application correctly
 
 ## Contributing
 
